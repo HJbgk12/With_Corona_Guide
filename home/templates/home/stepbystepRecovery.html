@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>with_corona_guide</title>
+    <link rel="stylesheet" href="{% static 'home/css/intro.css' %}" type="text/css">
+</head>
+<body>
+<div id="menu-bar">
+    <h1><a id="logo" href="/">WITH CORONA GUIDE</a></h1>
+    <h4><a id="link1" href="/stepbystepRecovery" class="link_text">단계적 일상 회복</a></h4>
+    <h4><a id="link2" href="/overseasTripInfo" class="link_text">해외 여행 정보</a></h4>
+</div>
+<div class="main">
+    <div class="buttons">
+        <button type="button" class="btn" id="button1" onclick="button1_click();"> 1단계 </button><br>
+        <button type="button" class="btn" id="button2" onclick="button2_click();"> 2단계 </button><br>
+        <button type="button" class="btn" id="button3" onclick="button3_click();"> 3단계 </button><br>
+    </div>
+    <div class="text" id="contents">
+    </div>
+</div>
+<script>
+    function button1_click() {
+        var text = "1단계\n 생업시설 운영 제한 완화";
+        document.getElementById("contents").innerText = text;
+    }
+    function button2_click() {
+        var text = "2단계\n 대규모 행사 허용";
+        document.getElementById("contents").innerText = text;
+    }
+    function button3_click() {
+        var text = "3단계\n 사적모임 제한 해제";
+        document.getElementById("contents").innerText = text;
+    }
+</script>
+</body>
+</html>

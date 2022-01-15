@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>with_corona_guide</title>
+    <link rel="stylesheet" href="{% static '/home/css/intro.css?after' %}" type="text/css">
+    <script src="{% static 'home/js/jquery-3.6.0.min.js' %}"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=pzbd3jnaoi&amp;submodules=panorama,geocoder,drawing,visualization"></script>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <!--font-awsome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css" integrity="sha512-6c4nX2tn5KbzeBJo9Ywpa0Gkt+mzCzJBrE1RB6fmpcsoN+b/w/euwIMuQKNyUoU/nToKN3a8SgNOtPrbW12fug==" crossorigin="anonymous" />
+
+</head>
+<body>
+
+<!--<header>
+    <i class="fas fa-bars" id="OpenBtn"></i>
+</header>-->
+
+<div id="menu-bar">
+    <h1>WITH CORONA GUIDE address<input type = "text" ></h1>
+    <h4><a id="link1" href="/stepbystepRecovery" class="link_text">단계적 일상 회복</a></h4>
+    <h4><a id="link2" href="/overseasTripInfo" class="link_text">해외 여행 정보</a></h4>
+</div>
+
+
+<div id="wrap" class="section">
+    <div id="map" style="width:100%;height:600px;"></div>
+    <code id="snippet" class="snippet"></code>
+    </div>
+<script type="text/javascript">
+
+$(function() {
+
+	initMap();
+
+});
+
+
+function initMap() {
+
+	var areaArr = new Array();  // 안심식당 상호명, 위치를 담는 배열
+	areaArr.push(
+        {loc : '원할머니보쌈족발본점' , addr : '서울특별시 중구 난계로 201' , lat : '37.5696506' , lng : '127.0231752'},
+        {loc : 'BHC치킨충무로역점' , addr : '서울특별시 중구 퇴계로 210' , lat : '37.5612419' , lng : '126.9950687'},
+        {loc : '동대문엽기떡볶이 동대문직영점' , addr : '서울특별시 중구 장충단로 249-10' , lat : '37.5672901' , lng : '127.0077594'},
+        {loc : '현가츠' , addr : '서울특별시 중구 명동8나길 45' , lat : '37.5610751' , lng : '126.982401'},
+        {loc : '원할머니보쌈족발본점' , addr : '서울특별시 중구 남대문로7길 23' , lat : '37.5638946' , lng : '126.9806026'}
+    );
+
+
+
+	let markers = new Array(); // 마커 정보를 담는 배열
+	let infoWindows = new Array(); // 정보창을 담는 배열
+
+	var map = new naver.maps.Map('map', {
+        center: new naver.maps.LatLng({{lat}}, {{lon}}), //지도 시작 지점(서울특별시 중구)
+        zoom: 15
+    });
+
+
+
+
+	for (var i = 0; i < areaArr.length; i++) {
+
+	    var marker = new naver.maps.Marker({
+	        map: map,
+	        title: areaArr[i].loc, // 안심식당 상호명
+	        position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng) // 안심식당 위치
+	    });
+
+	    /* 정보창 */
+		 var infoWindow = new naver.maps.InfoWindow({
+		     content: '<div style="width:200px;text-align:center;padding:10px;"><b>' + areaArr[i].loc + '</b><br>' + areaArr[i].addr + '</div>'
+		 }); // 클릭했을 때 띄워줄 정보 HTML 작성
+
+		 markers.push(marker); // 생성한 마커를 배열에 담는다.
+		 infoWindows.push(infoWindow); // 생성한 정보창을 배열에 담는다.
+	}
+
+
+    function getClickHandler(seq) {
+
+            return function(e) {  // 마커를 클릭하는 부분
+                var marker = markers[seq], // 클릭한 마커의 시퀀스로 찾는다.
+                    infoWindow = infoWindows[seq]; // 클릭한 마커의 시퀀스로 찾는다
+
+                if (infoWindow.getMap()) {
+                    infoWindow.close();
+                } else {
+                    infoWindow.open(map, marker); // 표출
+                }
+    		}
+    	}
+
+    for (var i=0, ii=markers.length; i<ii; i++) {
+    	console.log(markers[i] , getClickHandler(i));
+        naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i)); // 클릭한 마커 핸들러
+    }
+}
+
+</script>
+
+<div id="sidebar">
+    <div class="user_location">
+        <h3>현재 사용자의 위치는?</h3>
+        <i class="fas fa-map-marker-alt"></i>
+        <span>서울 특별시 중구</span>
+    </div>
+    <br/>
+    <div class="distance_level">
+        <h3>현재 코로나 단계는?</h3>
+        <i class="fas fa-thumbtack"></i>
+        <span>단계적 일상회복 1단계</span>
+        <br/><br/>
+        <h3>현재 몇 명까지 모일 수 있나요?</h3>
+        <p>*미접종자 기준: 최대 4명</p>
+        <p>*접종자 완료자 기준: 최대 10명 </p>
+        <p class="group_">단, 미접종자의 경우에는 어떠한 경우에도 최대 4명까지만 참석 가능합니다.</p>
+    </div>
+
+</div>
+<!--<script>
+        $(document).ready(function(){
+            var target = $("#sidebar");
+
+            // 버튼을 클릭하면 사이드바 열림
+            $(document).on("click", "#OpenBtn", function (e){
+                target.show();
+                target.addClass('emphasized');
+            });
+
+            // 사이드바 외부를 클릭하면 사이드바 닫힘
+            $(document).mouseup(function (e){
+                if(target.has(e.target).length==0) {
+                    target.hide();
+                    target.removeClass('emphasized');
+                }
+            });
+        });
+    </script>
+-->
+</body>
+</html>
